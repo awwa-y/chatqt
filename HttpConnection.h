@@ -6,14 +6,17 @@ class HttpConnection : public std::enable_shared_from_this<HttpConnection>
 public:
     friend class LogicSystem;
     HttpConnection(tcp::socket socket);
+    ~HttpConnection();
     void Start();
 
 private:
     void CheckDeadline();
     void WriteResponse();
     void HandleReq();
+    void PreParseGetParam();
      //void PreParseGetParam();
     tcp::socket  _socket;
+    std::unordered_map<std::string, std::string> _get_params;
     std::string _get_url;
     beast::flat_buffer  _buffer{ 8192 };
 
