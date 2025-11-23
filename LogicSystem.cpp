@@ -3,27 +3,20 @@
 void LogicSystem::RegGet(std::string url, HttpHandler handler) {
     _get_handlers.insert(make_pair(url, handler));
 }
+LogicSystem::~LogicSystem() {
+
+}
 LogicSystem::LogicSystem() {
     RegGet("/get_test", [](std::shared_ptr<HttpConnection> connection) {
         beast::ostream(connection->_response.body()) << "receive get_test req " << std::endl;
-        //if (connection->_get_params.empty()) {
+        int i = 0;
         beast::ostream(connection->_response.body()) << "no params" << std::endl;
-        //}
-       /* else {
-            // �����Ϊ�գ����������ӡ���в���
-            int i = 0;
-            for (auto& elem : connection->_get_params) {
-                i++;
-                beast::ostream(connection->_response.body())
-                    << "param" << i << " key is " << elem.first
-                    << ", value is " << elem.second << std::endl;
-            }
+        for (auto& elem : connection->_get_params) {
+            i++;
+            beast::ostream(connection->_response.body()) << "param" << i << "key is" << elem.first << std::endl;
+            beast::ostream(connection->_response.body()) << "param" << i << "value is" << elem.second;
         }
-        });*/
         });
-}
-LogicSystem::~LogicSystem()
-{
 }
 bool LogicSystem::HandleGet(std::string path, std::shared_ptr<HttpConnection> con) {
     if (_get_handlers.find(path) == _get_handlers.end()) {
