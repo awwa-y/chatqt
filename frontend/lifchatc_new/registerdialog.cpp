@@ -40,6 +40,10 @@ void registerDialog::on_get_code_clicked()
     bool match =regex.match(email).hasMatch();
     if(match){
         //发送http验证码
+        QJsonObject json_obj;
+        json_obj["email"]=email;
+        HttpMgr::GetInstance()->PostHttpReq(QUrl("http://localhost:8080/get_verifycode"),json_obj,
+                                            ReqId::ID_GET_VERIFY_CODE,Modules::REGISTERMOD);
         showTip(tr("邮箱格式正确"),false);
     }
     else{
@@ -83,7 +87,7 @@ void registerDialog::showTip(QString str,bool b_ok){
 void registerDialog::initHttpHandlers()
 {
 //注册获取验证码回包的逻辑
-    _handlers.insert(ReqId::ID_GET_VARIFY_CODE,[this](const QJsonObject& jsonObj){
+    _handlers.insert(ReqId::ID_GET_VERIFY_CODE,[this](const QJsonObject& jsonObj){
     int error=jsonObj["error"].toInt();
     if(error!=ErrorCodes::SUCCESS){
         showTip(tr("参数错误"),false);
