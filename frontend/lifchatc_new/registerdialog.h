@@ -21,6 +21,13 @@ signals:
 private slots:
     void on_get_code_clicked();//获取验证码判断合法性
     void slot_reg_mod_finish(ReqId id,QString res,ErrorCodes err);
+    // 删除未实现的cancelreg_clicked()槽函数声明
+    // void cancelreg_clicked();
+
+    void on_cancelreg_clicked();
+protected:
+    void closeEvent(QCloseEvent *event) override;
+
 private:
     void showTip(QString str,bool b_ok);
     void initHttpHandlers();
