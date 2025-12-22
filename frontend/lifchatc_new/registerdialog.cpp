@@ -2,7 +2,7 @@
 #include "ui_registerdialog.h"
 #include "httpmgr.h"
 #include "global.h"
-//
+#include <QCloseEvent>
 registerDialog::registerDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::registerDialog)
@@ -15,23 +15,20 @@ registerDialog::registerDialog(QWidget *parent)
     connect(HttpMgr::GetInstance().get(),&HttpMgr::sig_reg_mod_finish,this,&registerDialog::slot_reg_mod_finish);
     // 连接获取验证码按钮
     connect(ui->on_get_code, &QPushButton::clicked, this, &registerDialog::on_get_code_clicked);
-    
+    //connect(ui->cancelreg,&QPushButton::clicked,this,&registerDialog::cancelreg_clicked);
     // 查找并连接取消按钮
-    QPushButton *cancelBtn = findChild<QPushButton*>("pushButton_2");
-    if (cancelBtn) {
-        connect(cancelBtn, &QPushButton::clicked, this, [=]() {
-            emit backToLogin(); // 发射返回到登录界面的信号
-            this->hide(); // 隐藏注册对话框
-        });
-    }
+
+    connect(ui->cancelreg, &QPushButton::clicked, this, &registerDialog::on_cancelreg_clicked);
+    setWindowFlags(windowFlags() | Qt::WindowCloseButtonHint);
+
     initHttpHandlers();
 }
 //
 registerDialog::~registerDialog()
 {
     delete ui;
+
 }
-//
 void registerDialog::on_get_code_clicked()
 {
 
@@ -42,7 +39,7 @@ void registerDialog::on_get_code_clicked()
         //发送http验证码
         QJsonObject json_obj;
         json_obj["email"]=email;
-        HttpMgr::GetInstance()->PostHttpReq(QUrl("http://localhost:8080/get_verifycode"),json_obj,
+        HttpMgr::GetInstance()->PostHttpReq(QUrl(gate_url_prefix+"/get_verifycode"),json_obj,
                                             ReqId::ID_GET_VERIFY_CODE,Modules::REGISTERMOD);
         showTip(tr("邮箱格式正确"),false);
     }
@@ -53,7 +50,7 @@ void registerDialog::on_get_code_clicked()
 
 
 }
-//
+
 void registerDialog::slot_reg_mod_finish(ReqId id, QString res, ErrorCodes err)
 {
     if(err!=ErrorCodes::SUCCESS){
@@ -78,7 +75,8 @@ void registerDialog::slot_reg_mod_finish(ReqId id, QString res, ErrorCodes err)
 
 
 }
-void registerDialog::showTip(QString str,bool b_ok){
+void registerDialog::showTip(QString str,bool b_ok)
+{
     ui->err_tip->setText(str);
     ui->err_tip->setProperty("state","err");
     repolish(ui->err_tip);
@@ -100,4 +98,14 @@ void registerDialog::initHttpHandlers()
 }
 
 
-
+    void registerDialog::on_cancelreg_clicked()
+    {
+        emit backToLogin(); // 发射返回到登录界面的信号
+        qDebug()<<"发送信号";
+        this->hide();
+    }
+    void registerDialog::closeEvent(QCloseEvent *event)
+    {
+        emit backToLogin(); // 发射返回登录界面的信号
+        event->accept(); // 接受关闭事件
+    }
