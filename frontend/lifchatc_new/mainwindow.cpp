@@ -5,6 +5,7 @@
 #include <QPixmap>
 #include <QLabel>
 #include <QDebug>
+#include "global.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -13,36 +14,29 @@ MainWindow::MainWindow(QWidget *parent)
     , _reg_dlg(nullptr)
 {
     ui->setupUi(this);
-
-    // 先验证资源系统是否正常工作 - 测试图片加载
-    TestResourceLoading();
-
-    // 初始化登录对话框
     _login_dlg = new loginDialog(this);
-    // 为登录对话框添加图片（假设登录对话框有一个名为logoLabel的QLabel）
-    AddImageToLoginDialog();
-
-    // 初始化注册对话框
     _reg_dlg = new registerDialog(this);
-
-    // 设置窗口属性
-    setCentralWidget(_login_dlg);
-    setFixedSize(350, 500);
-    _login_dlg->setWindowFlags(Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
-    _reg_dlg->setWindowFlags(Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
-    _reg_dlg->hide();
+    _login_dlg->show();
+    this->setFixedSize(_login_dlg->size());
+    connect(_reg_dlg, &registerDialog::backToLogin,
+            this, [=]() {
+                qDebug() << "收到backToLogin信号，切换到登录界面";
+                setCentralWidget(_login_dlg);
+                _login_dlg->show();
+            }, Qt::QueuedConnection);
 
     // 连接切换注册信号
     connect(_login_dlg, &loginDialog::switchRegister,
             this, &MainWindow::SlotSwitchReg);
-    
+    //connect(_reg_dlg,&registerDialog::backToLogin,
+            //this,&MainWindow::Swicthlog);
     // 连接返回登录信号
-    connect(_reg_dlg, &registerDialog::backToLogin,
+    /*connect(_reg_dlg, &registerDialog::backToLogin,
             this, [=]() {
                 _reg_dlg->hide();
                 setCentralWidget(_login_dlg);
                 _login_dlg->show();
-            });
+            });*/
 }
 
 MainWindow::~MainWindow()
@@ -121,7 +115,14 @@ void MainWindow::AddImageToLoginDialog()
 
 void MainWindow::SlotSwitchReg()
 {
+    qDebug() << "切换到注册界面";
     _login_dlg->hide();
-    setCentralWidget(_reg_dlg);
+
     _reg_dlg->show();
+    this->setFixedSize(_reg_dlg->size());
+}
+void MainWindow::Swicthlog(){
+    _reg_dlg->hide();
+    //setCentralWidget(_login_dlg);
+    _login_dlg->show();
 }
