@@ -24,7 +24,7 @@ private slots:
     // 删除未实现的cancelreg_clicked()槽函数声明
     // void cancelreg_clicked();
 
-    void on_cancelreg_clicked();
+    void CancelClicked();
 protected:
     void closeEvent(QCloseEvent *event) override;
 
