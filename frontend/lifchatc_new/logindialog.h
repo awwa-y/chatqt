@@ -14,6 +14,7 @@ class loginDialog : public QDialog
 public:
     explicit loginDialog(QWidget *parent = nullptr);
     ~loginDialog();
+    void picset(QString imagePath);
 
 public slots:
     // 登录按钮点击槽函数
@@ -25,6 +26,10 @@ public slots:
 signals:
     // 切换到注册界面的信号
     void switchRegister();
+    void entermainwindow();
+
+private slots:
+    void on_loginbutton_clicked();
 
 private:
     Ui::loginDialog *ui;
