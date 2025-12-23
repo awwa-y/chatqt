@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include "logindialog.h"
 #include "registerdialog.h"
-
+#include <QStackedWidget>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -19,6 +19,7 @@ public:
 
 public slots:
     void SlotSwitchReg();
+    void Swicthlog();
 
 private:
     // 测试资源加载的辅助函数
@@ -29,5 +30,6 @@ private:
     Ui::MainWindow *ui;
     loginDialog *_login_dlg;
     registerDialog *_reg_dlg;
+    QStackedWidget *_stack_widget;
 };
 #endif // MAINWINDOW_H
