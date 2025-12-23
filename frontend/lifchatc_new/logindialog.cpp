@@ -11,25 +11,30 @@ loginDialog::loginDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // 使用资源文件路径加载图片
-    QString imagePath = ":/res/pict.ico";
-    QPixmap pix(imagePath);
-
-    if (pix.isNull()) {
-        // 加载失败时显示提示
-        ui->logoLabel->setText("图片缺失\n检查路径：\n" + imagePath);
-        qDebug() << "图片加载失败！路径：" << imagePath;
-    } else {
-        // 加载成功
-        ui->logoLabel->setPixmap(pix);
-        ui->logoLabel->setScaledContents(true);
-        qDebug() << "图片加载成功！路径：" << imagePath;
-    }
+    this->setWindowFlags(Qt::Widget);
+    picset(":/res/pict.ico");//资源文件图片
 }
 
 loginDialog::~loginDialog()
 {
     delete ui;
+}
+
+void loginDialog::picset(QString imagePath)
+{
+    QString imagePath1 = imagePath;
+    QPixmap pix(imagePath1);
+
+    if (pix.isNull()) {
+        // 加载失败时显示提示
+        ui->logoLabel->setText("图片缺失\n检查路径：\n" + imagePath1);
+        qDebug() << "图片加载失败！路径：" << imagePath1;
+    } else {
+        // 加载成功
+        ui->logoLabel->setPixmap(pix);
+        ui->logoLabel->setScaledContents(true);
+        qDebug() << "图片加载成功！路径：" << imagePath1;
+    }
 }
 
 void loginDialog::on_pushButton_clicked()
@@ -54,3 +59,11 @@ void loginDialog::on_resgiterPushButton_clicked()
     qDebug() << "请求切换到注册界面";
     emit switchRegister(); // 发射信号，由MainWindow处理切换逻辑
 }
+
+void loginDialog::on_loginbutton_clicked()
+{
+    emit entermainwindow();
+    qDebug()<<"登录成功";
+
+}
+
