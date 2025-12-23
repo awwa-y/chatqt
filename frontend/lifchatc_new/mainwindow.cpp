@@ -5,38 +5,45 @@
 #include <QPixmap>
 #include <QLabel>
 #include <QDebug>
-#include "global.h"
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , _login_dlg(nullptr)
     , _reg_dlg(nullptr)
+    , _stack_widget(nullptr)
 {
     ui->setupUi(this);
+    _stack_widget = new QStackedWidget(this);
+
     _login_dlg = new loginDialog(this);
     _reg_dlg = new registerDialog(this);
-    _login_dlg->show();
+
+    //_login_dlg->show();
+
+    _stack_widget->addWidget(_login_dlg);
+    _stack_widget->addWidget(_reg_dlg);
+
+    setCentralWidget(_stack_widget);
     this->setFixedSize(_login_dlg->size());
     connect(_reg_dlg, &registerDialog::backToLogin,
             this, [=]() {
                 qDebug() << "收到backToLogin信号，切换到登录界面";
-                setCentralWidget(_login_dlg);
+                _stack_widget->setCurrentIndex(0);
                 _login_dlg->show();
             }, Qt::QueuedConnection);
 
     // 连接切换注册信号
     connect(_login_dlg, &loginDialog::switchRegister,
             this, &MainWindow::SlotSwitchReg);
-    //connect(_reg_dlg,&registerDialog::backToLogin,
-            //this,&MainWindow::Swicthlog);
-    // 连接返回登录信号
-    /*connect(_reg_dlg, &registerDialog::backToLogin,
-            this, [=]() {
-                _reg_dlg->hide();
-                setCentralWidget(_login_dlg);
-                _login_dlg->show();
-            });*/
+    connect(_login_dlg,&loginDialog::entermainwindow,this,[=](){
+        qDebug() << "收到entermainwindow信号，切换到登录界面";
+        this->show();
+
+
+    });
+
 }
 
 MainWindow::~MainWindow()
@@ -116,13 +123,12 @@ void MainWindow::AddImageToLoginDialog()
 void MainWindow::SlotSwitchReg()
 {
     qDebug() << "切换到注册界面";
-    _login_dlg->hide();
-
-    _reg_dlg->show();
+    _stack_widget->setCurrentIndex(1);
     this->setFixedSize(_reg_dlg->size());
+
 }
 void MainWindow::Swicthlog(){
     _reg_dlg->hide();
-    //setCentralWidget(_login_dlg);
+
     _login_dlg->show();
 }
