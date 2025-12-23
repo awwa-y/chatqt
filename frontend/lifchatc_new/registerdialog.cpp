@@ -18,7 +18,8 @@ registerDialog::registerDialog(QWidget *parent)
     //connect(ui->cancelreg,&QPushButton::clicked,this,&registerDialog::cancelreg_clicked);
     // 查找并连接取消按钮
 
-    connect(ui->cancelreg, &QPushButton::clicked, this, &registerDialog::on_cancelreg_clicked);
+    connect(ui->cancelreg, &QPushButton::clicked, this, &registerDialog::CancelClicked);
+    this->setWindowFlags(Qt::Widget);
     setWindowFlags(windowFlags() | Qt::WindowCloseButtonHint);
 
     initHttpHandlers();
@@ -98,7 +99,7 @@ void registerDialog::initHttpHandlers()
 }
 
 
-    void registerDialog::on_cancelreg_clicked()
+    void registerDialog::CancelClicked()
     {
         emit backToLogin(); // 发射返回到登录界面的信号
         qDebug()<<"发送信号";
