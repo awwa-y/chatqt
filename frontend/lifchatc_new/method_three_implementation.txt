@@ -1,0 +1,151 @@
+# 方法三：使用QStackedWidget管理界面的详细实现
+
+## 1. 修改MainWindow构造函数 (mainwindow.cpp)
+
+```cpp
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+    , _login_dlg(nullptr)
+    , _reg_dlg(nullptr)
+    , _stack_widget(nullptr)
+{
+    ui->setupUi(this);
+    
+    // 创建并配置QStackedWidget
+    _stack_widget = new QStackedWidget(this);
+    
+    // 创建登录和注册对话框
+    _login_dlg = new loginDialog(_stack_widget); // parent设置为stack_widget
+    _reg_dlg = new registerDialog(_stack_widget); // parent设置为stack_widget
+    
+    // 将对话框添加到QStackedWidget中
+    _stack_widget->addWidget(_login_dlg);
+    _stack_widget->addWidget(_reg_dlg);
+    
+    // 设置QStackedWidget为中央部件
+    setCentralWidget(_stack_widget);
+    
+    // 隐藏MainWindow的菜单栏和状态栏（可选）
+    ui->menubar->hide();
+    ui->statusbar->hide();
+    
+    // 设置MainWindow固定大小（与登录对话框一致）
+    this->setFixedSize(_login_dlg->size());
+    
+    // 默认显示登录界面
+    _stack_widget->setCurrentIndex(0);
+    
+    // 连接切换注册信号
+    connect(_login_dlg, &loginDialog::switchRegister,
+            this, &MainWindow::SlotSwitchReg);
+    
+    // 连接返回登录信号
+    connect(_reg_dlg, &registerDialog::backToLogin,
+            this, [=]() {
+                qDebug() << "收到backToLogin信号，切换到登录界面";
+                _stack_widget->setCurrentIndex(0);
+                this->setFixedSize(_login_dlg->size()); // 恢复MainWindow大小与登录对话框一致
+            });
+}
+```
+
+## 2. 修改MainWindow析构函数 (mainwindow.cpp)
+
+```cpp
+MainWindow::~MainWindow()
+{
+    delete ui;
+    // QStackedWidget会自动管理子部件的生命周期，所以不需要手动删除
+}
+```
+
+## 3. 修改SlotSwitchReg方法 (mainwindow.cpp)
+
+```cpp
+void MainWindow::SlotSwitchReg()
+{
+    qDebug() << "切换到注册界面";
+    _stack_widget->setCurrentIndex(1); // 切换到注册界面
+    this->setFixedSize(_reg_dlg->size()); // 调整MainWindow大小与注册对话框一致
+}
+```
+
+## 4. 修改MainWindow头文件 (mainwindow.h)
+
+```cpp
+class MainWindow : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
+
+public slots:
+    void SlotSwitchReg();
+    void Swicthlog();
+
+private:
+    // 测试资源加载的辅助函数
+    void TestResourceLoading();
+    // 向登录对话框添加图片
+    void AddImageToLoginDialog();
+
+    Ui::MainWindow *ui;
+    loginDialog *_login_dlg;
+    registerDialog *_reg_dlg;
+    QStackedWidget *_stack_widget; // 添加QStackedWidget指针
+};
+```
+
+## 5. 修改main.cpp
+
+```cpp
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
+    
+    // ... 其他代码保持不变 ...
+    
+    MainWindow w;
+    // 不需要调用hide()，MainWindow会正常显示但只显示QStackedWidget的内容
+    return a.exec();
+}
+```
+
+## 6. 可选：设置对话框的窗口属性
+
+在loginDialog和registerDialog的构造函数中添加（如果需要）：
+
+```cpp
+// 登录对话框构造函数
+loginDialog::loginDialog(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::loginDialog)
+{
+    ui->setupUi(this);
+    this->setWindowFlags(Qt::Widget); // 确保对话框作为子部件而不是顶级窗口
+    // ... 其他代码 ...
+}
+
+// 注册对话框构造函数
+registerDialog::registerDialog(QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::registerDialog)
+{
+    ui->setupUi(this);
+    this->setWindowFlags(Qt::Widget); // 确保对话框作为子部件而不是顶级窗口
+    // ... 其他代码 ...
+}
+```
+
+## 实现说明
+
+1. **QStackedWidget管理界面**：QStackedWidget允许在同一位置显示多个界面，每次只显示一个
+2. **隐藏菜单栏和状态栏**：通过`ui->menubar->hide()`和`ui->statusbar->hide()`隐藏默认的窗口元素
+3. **固定窗口大小**：根据当前显示的对话框调整MainWindow的大小
+4. **自动管理生命周期**：QStackedWidget会自动管理添加到其中的部件的生命周期，不需要手动删除
+5. **简洁的界面切换**：通过`setCurrentIndex()`方法可以快速切换不同的界面
+
+这种方法既保持了MainWindow的存在（避免应用图标消失），又实现了登录和注册界面的无缝切换，同时隐藏了不需要的窗口元素，使界面更加简洁。

@@ -16,13 +16,14 @@ class HttpMgr : public QObject, public Singleton<HttpMgr>,public std::enable_sha
     Q_OBJECT
 public:
     ~HttpMgr();
+    void PostHttpReq(QUrl url,QJsonObject json,ReqId req_id,Modules mod);
 private:
     // 网络访问管理器实例
     QNetworkAccessManager m_networkManager;
     HttpMgr();
     // 友元声明，允许Singleton访问私有构造函数
     friend class Singleton<HttpMgr>;
-    void PostHttpReq(QUrl url,QJsonObject json,ReqId req_id,Modules mod);
+
 private slots:
     void slot_http_finish(ReqId id,QString res,ErrorCodes err,Modules mod);
 signals:

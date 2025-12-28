@@ -46,7 +46,7 @@ LogicSystem::LogicSystem() {
             return true;
         }
 
-        //keyå­˜åœ¨
+        //key´æÔÚ
         auto email = src_root["email"].asString();
         GetVarifyRsp rsp=VerifyGrpcClient::GetInstance()->GetVarifyCode(email);
         std::cout << "email is" << email << std::endl;

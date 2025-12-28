@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
     }else{
         qDebug("Open failed");
     }*/
+    a.setWindowIcon(QIcon(":/res/pict.ico"));
     QString fileName="config.ini";
     QString app_path=QCoreApplication::applicationDirPath();
 

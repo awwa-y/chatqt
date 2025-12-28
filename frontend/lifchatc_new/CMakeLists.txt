@@ -26,7 +26,8 @@ qt_add_executable(lifchatc_new
     registerdialog.ui
     ${RESOURCES}
     singleton.h
-    httpmgr.h httpmgr.cpp  # 必须包含资源变量
+    httpmgr.h httpmgr.cpp
+    singleton.h  # 必须包含资源变量
 )
 
 # 链接Qt库

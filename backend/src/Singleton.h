@@ -1,6 +1,8 @@
+#pragma once
 #include <memory>
 #include <mutex>
 #include <iostream>
+
 template <typename T>
 class Singleton {
 protected:
@@ -24,7 +26,6 @@ public:
     ~Singleton() {
         std::cout << "this is singleton destruct" << std::endl;
     }
-};
-
+}; 
 template <typename T>
 std::shared_ptr<T> Singleton<T>::_instance = nullptr;

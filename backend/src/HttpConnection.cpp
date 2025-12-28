@@ -1,13 +1,22 @@
 #include "HttpConnection.h"
 #include "LogicSystem.h"
-HttpConnection::HttpConnection(tcp::socket socket)
-    : _socket(std::move(socket))                    // 转移socket所有权
-    //, deadline_(_socket.get_executor(), kConnTimeout) {  // 初始化超时定时器
-{}
+#include "CServer.h"
+#include <iostream>
+
+HttpConnection::HttpConnection(boost::asio::io_context& ioc)
+    :_socket(ioc)
+{
+
+}
 HttpConnection::~HttpConnection() {
 
 }
-// ==================== 启动连接处理 ====================
+tcp::socket& HttpConnection::GetSocket()
+{
+    // TODO: 在此处插入 return 语句
+    return _socket;
+}
+//启动连接处理
 void HttpConnection::Start()
 {
     auto self = shared_from_this();
@@ -132,6 +141,22 @@ void HttpConnection::HandleReq() {
     if (_request.method() == http::verb::get) {
         PreParseGetParam();
         bool success = LogicSystem::GetInstance()->HandleGet(_get_url, shared_from_this());
+        if (!success) {
+            _response.result(http::status::not_found);
+            _response.set(http::field::content_type, "text/plain");
+            beast::ostream(_response.body()) << "url not found\r\n";
+            WriteResponse();
+            return;
+        }
+
+        _response.result(http::status::ok);
+        _response.set(http::field::server, "GateServer");
+        WriteResponse();
+        return;
+    }
+    if (_request.method() == http::verb::post) {
+        PreParseGetParam();
+        bool success = LogicSystem::GetInstance()->HandlerPost(_get_url, shared_from_this());
         if (!success) {
             _response.result(http::status::not_found);
             _response.set(http::field::content_type, "text/plain");

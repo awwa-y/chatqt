@@ -15,10 +15,7 @@ registerDialog::registerDialog(QWidget *parent)
     connect(HttpMgr::GetInstance().get(),&HttpMgr::sig_reg_mod_finish,this,&registerDialog::slot_reg_mod_finish);
     // 连接获取验证码按钮
     connect(ui->on_get_code, &QPushButton::clicked, this, &registerDialog::on_get_code_clicked);
-    //connect(ui->cancelreg,&QPushButton::clicked,this,&registerDialog::cancelreg_clicked);
-    // 查找并连接取消按钮
-
-    connect(ui->cancelreg, &QPushButton::clicked, this, &registerDialog::CancelClicked);
+    connect(ui->cancelreg, &QPushButton::clicked, this, &registerDialog::CancelClicked);//取消回退
     this->setWindowFlags(Qt::Widget);
     setWindowFlags(windowFlags() | Qt::WindowCloseButtonHint);
 
@@ -108,5 +105,5 @@ void registerDialog::initHttpHandlers()
     void registerDialog::closeEvent(QCloseEvent *event)
     {
         emit backToLogin(); // 发射返回登录界面的信号
-        event->accept(); // 接受关闭事件
+        event->accept(); // 接受
     }

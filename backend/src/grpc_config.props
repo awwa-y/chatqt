@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  
+  <PropertyGroup>
+    <IncludePath>C:\grpcddl\grpc\include;$(IncludePath)</IncludePath>
+    <LibraryPath>
+      C:\grpcddl\grpc\visualpro\Debug;
+      C:\grpcddl\grpc\visualpro\third_party\re2\Debug;
+      C:\grpcddl\grpc\visualpro\third_party\protobuf\Debug;
+      $(LibraryPath)
+    </LibraryPath>
+  </PropertyGroup>
+  
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>
+        C:\grpcddl\grpc\include;
+        C:\grpcddl\grpc\third_party\abseil-cpp;
+        %(AdditionalIncludeDirectories)
+      </AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>
+        _WIN32_WINNT=0x600;
+        NOMINMAX;
+        %(PreprocessorDefinitions)
+      </PreprocessorDefinitions>
+    </ClCompile>
+    
+    <Link>
+      <AdditionalLibraryDirectories>
+        C:\grpcddl\grpc\visualpro\Debug;
+        C:\grpcddl\grpc\visualpro\third_party\re2\Debug;
+        C:\grpcddl\grpc\visualpro\third_party\protobuf\Debug;
+        %(AdditionalLibraryDirectories)
+      </AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+        grpc++.lib;
+        grpc.lib;
+        gpr.lib;
+        address_sorting.lib;
+        upb.lib;
+        protobuf.lib;
+        absl_strings.lib;
+        absl_base.lib;
+        absl_throw_delegate.lib;
+        ws2_32.lib;
+        crypt32.lib;
+        bcrypt.lib;
+        userenv.lib;
+        advapi32.lib;
+        %(AdditionalDependencies)
+      </AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>
