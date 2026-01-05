@@ -425,24 +425,17 @@ npm test
 2. 使用Debug模式编译
 3. 启动各个服务组件
 
-### 生产环境部署
-1. 使用Release模式编译
-2. 配置HTTPS证书
-3. 设置负载均衡
-4. 配置监控告警
 
-详细部署指南请参考 [DEPLOYMENT.md](docs/DEPLOYMENT.md)
 
 ## 🤝 贡献指南
 
 我们欢迎任何形式的贡献！
 
 ### 贡献方式
-1. **Fork** 项目
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启 **Pull Request**
+
+ 创建特性分支 (`git checkout -b feature/AmazingFeature`)
+ 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+ 推送到分支 (`git push origin feature/AmazingFeature`)
 
 ### 代码规范
 - **C++：** 遵循Google C++编码规范
@@ -475,15 +468,6 @@ chore: 构建过程或辅助工具的变动
 - 🖼 头像上传功能
 - 📱 群组聊天功能
 - 🔔 消息推送通知
-- 🌐 国际化支持
-
-## 📄 许可证
-
-本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情
-
-## 👥 作者
-
-- **Your Name** - *初始开发* - [YourGitHub](https://github.com/yourusername)
 
 ## 🙏 致谢
 
@@ -496,8 +480,8 @@ chore: 构建过程或辅助工具的变动
 
 ## 📞 联系我们
 
-- **项目主页：** https://github.com/yourusername/chat-system
-- **问题反馈：** https://github.com/yourusername/chat-system/issues
+- **项目主页：** https://github.com/awwa-y/chat-system
+- **问题反馈：** https://github.com/awwa-y/chat-system/issues
 - **邮箱：** your.email@example.com
 
 
